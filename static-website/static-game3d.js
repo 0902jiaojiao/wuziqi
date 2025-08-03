@@ -237,6 +237,17 @@ class StaticGomoku3D {
         this.renderer.domElement.addEventListener('click', (e) => this.onMouseClick(e));
         this.renderer.domElement.addEventListener('mousemove', (e) => this.onMouseMove(e));
         
+        // 触摸事件 - 移动端支持
+        this.renderer.domElement.addEventListener('touchend', (e) => {
+            e.preventDefault(); // 防止触发click事件
+            this.onTouchEnd(e);
+        }, { passive: false });
+        
+        this.renderer.domElement.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // 防止页面滚动
+            this.onTouchMove(e);
+        }, { passive: false });
+        
         // 按钮事件
         document.getElementById('newGameBtn').addEventListener('click', () => this.newGame());
         document.getElementById('resetGameBtn').addEventListener('click', () => this.resetGame());
@@ -323,6 +334,107 @@ class StaticGomoku3D {
                 this.showToast('该位置已有棋子', 1500);
             }
         }
+    }
+
+    /**
+     * 触摸结束事件（用于落子）
+     */
+    onTouchEnd(event) {
+        if (this.isProcessing || this.game.gameOver || this.game.currentPlayer !== 1) {
+            if (this.isProcessing) {
+                this.showToast('请等待AI思考完成', 1000);
+            }
+            return;
+        }
+
+        this.updateTouchPosition(event);
+        
+        // 射线检测
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.intersectionPoints);
+        
+        if (intersects.length > 0) {
+            const { row, col } = intersects[0].object.userData;
+            
+            if (this.game.isValidMove(row, col)) {
+                this.makePlayerMove(row, col);
+                // 触摸反馈
+                this.showTouchFeedback(row, col);
+            } else {
+                this.showToast('该位置已有棋子', 1500);
+            }
+        }
+    }
+
+    /**
+     * 触摸移动事件（用于悬停效果）
+     */
+    onTouchMove(event) {
+        this.updateTouchPosition(event);
+        
+        // 射线检测悬停效果
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.intersectionPoints);
+        
+        // 重置之前的悬停状态
+        if (this.hoveredIntersection) {
+            this.hoveredIntersection.material.opacity = 0;
+            this.hoveredIntersection.visible = false;
+        }
+        
+        if (intersects.length > 0 && !this.isProcessing && !this.game.gameOver && this.game.currentPlayer === 1) {
+            const intersection = intersects[0].object;
+            const { row, col } = intersection.userData;
+            
+            if (this.game.isValidMove(row, col)) {
+                intersection.visible = true;
+                intersection.material.opacity = 0.3;
+                this.hoveredIntersection = intersection;
+            }
+        }
+    }
+
+    /**
+     * 更新触摸位置
+     */
+    updateTouchPosition(event) {
+        if (event.changedTouches && event.changedTouches[0]) {
+            const rect = this.renderer.domElement.getBoundingClientRect();
+            this.mouse.x = ((event.changedTouches[0].clientX - rect.left) / rect.width) * 2 - 1;
+            this.mouse.y = -((event.changedTouches[0].clientY - rect.top) / rect.height) * 2 + 1;
+        }
+    }
+
+    /**
+     * 显示触摸反馈效果
+     */
+    showTouchFeedback(row, col) {
+        const feedback = new THREE.Mesh(
+            new THREE.RingGeometry(0.2, 0.4, 16),
+            new THREE.MeshLambertMaterial({
+                color: 0x52c41a,
+                transparent: true,
+                opacity: 0.8
+            })
+        );
+        feedback.position.set(col - 7, 0.05, row - 7);
+        feedback.rotation.x = -Math.PI / 2;
+        
+        this.boardGroup.add(feedback);
+        
+        // 动画效果
+        const startTime = Date.now();
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < 600) {
+                feedback.material.opacity = 0.8 * (1 - elapsed / 600);
+                feedback.scale.setScalar(1 + elapsed / 1200);
+                setTimeout(animate, 16);
+            } else {
+                this.boardGroup.remove(feedback);
+            }
+        };
+        animate();
     }
 
     /**
