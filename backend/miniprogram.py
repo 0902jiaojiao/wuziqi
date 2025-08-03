@@ -12,7 +12,7 @@ import os
 from game_logic import GomokuGame
 from ai_player import GomokuAI
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='../website')
 CORS(app)  # 允许跨域请求
 
 # 存储游戏会话的字典
@@ -22,12 +22,12 @@ game_sessions = {}
 @app.route('/')
 def index():
     """网页版首页"""
-    return send_from_directory('static', 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/<path:filename>')
 def static_files(filename):
     """静态文件服务"""
-    return send_from_directory('static', filename)
+    return send_from_directory(app.static_folder, filename)
 
 @app.route('/api/new_game', methods=['POST'])
 def new_game():
