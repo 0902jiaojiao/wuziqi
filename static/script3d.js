@@ -334,6 +334,26 @@ class Gomoku3D {
         animate();
     }
 
+    // 为AI最新棋子添加动画
+    animateLatestAiPiece() {
+        if (!this.lastAiMove) return;
+        
+        const { row, col } = this.lastAiMove;
+        
+        // 找到AI最新下的棋子
+        this.piecesGroup.traverse((child) => {
+            if (child.userData && 
+                child.userData.row === row && 
+                child.userData.col === col && 
+                child.userData.player === 2) {
+                
+                // 将棋子移到空中，然后执行掉落动画
+                child.position.y = 5;
+                this.animatePieceDrop(child);
+            }
+        });
+    }
+
     // 设置事件监听器
     setupEventListeners() {
         // 按钮事件
@@ -643,32 +663,36 @@ class Gomoku3D {
                     row: result.ai_move.row,
                     col: result.ai_move.col
                 };
+            }
+
+            // 延迟更新游戏状态，让AI棋子有动画效果
+            setTimeout(() => {
+                this.updateGameState(result.board_state);
                 
-                // 创建AI棋子并添加动画
-                setTimeout(() => {
-                    this.create3DPiece(result.ai_move.row, result.ai_move.col, 2, true);
-                }, 500);
-            }
-
-            // 更新完整游戏状态
-            this.updateGameState(result.board_state);
-
-            // 检查游戏是否结束
-            if (result.board_state.game_over) {
-                this.handleGameOver(result.board_state.winner);
-            } else {
-                // 显示AI落子高亮
-                if (result.ai_move) {
-                    const thinkingTime = result.ai_thinking_time || 0;
-                    setTimeout(() => {
-                        this.showAiMoveHighlight(
-                            result.ai_move.row, 
-                            result.ai_move.col, 
-                            thinkingTime.toFixed(1)
-                        );
-                    }, 800);
+                // 为AI的最新棋子添加动画
+                if (this.lastAiMove) {
+                    this.animateLatestAiPiece();
                 }
-            }
+                
+                // 检查游戏是否结束
+                if (result.board_state.game_over) {
+                    setTimeout(() => {
+                        this.handleGameOver(result.board_state.winner);
+                    }, 1000); // 等待动画完成
+                } else {
+                    // 显示AI落子高亮
+                    if (result.ai_move) {
+                        const thinkingTime = result.ai_thinking_time || 0;
+                        setTimeout(() => {
+                            this.showAiMoveHighlight(
+                                result.ai_move.row, 
+                                result.ai_move.col, 
+                                thinkingTime.toFixed(1)
+                            );
+                        }, 300); // 相对于状态更新的时间
+                    }
+                }
+            }, 500);
 
         } catch (error) {
             console.error('落子失败:', error);
