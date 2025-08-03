@@ -171,20 +171,31 @@ body {
 }
 
 #gameBoard {
-    background: linear-gradient(135deg, #deb887 0%, #d2b48c 100%);
-    border: 3px solid #8b7355;
-    border-radius: 10px;
+    background: linear-gradient(135deg, #f4e4bc 0%, #deb887 25%, #d2b48c 50%, #cd853f 75%, #b8860b 100%);
+    border: 4px solid #8b7355;
+    border-radius: 15px;
     cursor: crosshair;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.3);
-    transition: transform 0.1s ease;
+    box-shadow: 
+        0 15px 35px rgba(0,0,0,0.3),
+        0 5px 15px rgba(0,0,0,0.2),
+        inset 0 3px 6px rgba(255,255,255,0.4),
+        inset 0 -3px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
 }
 
 #gameBoard:hover {
-    transform: scale(1.01);
+    transform: scale(1.01) rotateX(1deg);
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.35),
+        0 8px 20px rgba(0,0,0,0.25),
+        inset 0 3px 6px rgba(255,255,255,0.5),
+        inset 0 -3px 6px rgba(0,0,0,0.15);
 }
 
 #gameBoard:active {
-    transform: scale(0.99);
+    transform: scale(0.99) rotateX(-1deg);
+    transition: transform 0.1s ease;
 }
 
 .hint-overlay {
