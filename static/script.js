@@ -247,11 +247,11 @@ class GomokuGame {
     // 获取获胜者文本
     getWinnerText() {
         if (this.winner === 1) {
-            return '🎉 恭喜！玩家获胜！';
+            return '恭喜！玩家获胜！';
         } else if (this.winner === 2) {
-            return '🤖 AI获胜！再接再厉！';
+            return 'AI获胜！再接再厉！';
         } else {
-            return '🤝 平局！';
+            return '平局！';
         }
     }
 
@@ -525,31 +525,87 @@ class GomokuGame {
         }
     }
 
-    // 绘制棋子
+    // 绘制棋子 - 立体效果
     drawPiece(row, col, player) {
         const ctx = this.ctx;
         const x = this.cellSize * (col + 0.5);
         const y = this.cellSize * (row + 0.5);
         const radius = this.cellSize * 0.4;
         
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.save();
         
         if (player === 1) {
-            // 黑子
-            ctx.fillStyle = '#000000';
+            // 黑子 - 立体效果
+            // 底部阴影
+            ctx.beginPath();
+            ctx.arc(x + 2, y + 2, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
             ctx.fill();
+            
+            // 主体黑子渐变
+            const gradient = ctx.createRadialGradient(
+                x - radius * 0.3, y - radius * 0.3, 0,
+                x, y, radius
+            );
+            gradient.addColorStop(0, '#4a4a4a');
+            gradient.addColorStop(0.7, '#1a1a1a');
+            gradient.addColorStop(1, '#000000');
+            
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 高光效果
+            ctx.beginPath();
+            ctx.arc(x - radius * 0.3, y - radius * 0.3, radius * 0.3, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fill();
+            
+            // 边框
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
             ctx.strokeStyle = '#333333';
             ctx.lineWidth = 1;
             ctx.stroke();
+            
         } else if (player === 2) {
-            // 白子
-            ctx.fillStyle = '#ffffff';
+            // 白子 - 立体效果
+            // 底部阴影
+            ctx.beginPath();
+            ctx.arc(x + 2, y + 2, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
             ctx.fill();
-            ctx.strokeStyle = '#cccccc';
+            
+            // 主体白子渐变
+            const gradient = ctx.createRadialGradient(
+                x - radius * 0.3, y - radius * 0.3, 0,
+                x, y, radius
+            );
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.7, '#f0f0f0');
+            gradient.addColorStop(1, '#d0d0d0');
+            
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 高光效果
+            ctx.beginPath();
+            ctx.arc(x - radius * 0.3, y - radius * 0.3, radius * 0.25, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fill();
+            
+            // 边框
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#999999';
             ctx.lineWidth = 1;
             ctx.stroke();
         }
+        
+        ctx.restore();
     }
 
     // 绘制提示
