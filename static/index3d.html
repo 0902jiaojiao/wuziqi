@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 五子棋AI对战 - 3D版本</title>
+    <title>五子棋AI对战 - 3D版本</title>
     <link rel="stylesheet" href="style3d.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23333%22/></svg>">
     
     <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -16,7 +16,7 @@
     <div class="container">
         <!-- 游戏标题 -->
         <header class="game-header">
-            <h1>🎮 五子棋AI对战 3D版</h1>
+            <h1>五子棋AI对战 3D版</h1>
             <p class="subtitle">真实3D体验，专业AI挑战</p>
             <div class="version-switch">
                 <a href="/" class="btn btn-outline">切换到2D版本</a>
@@ -34,15 +34,15 @@
             </div>
 
             <div class="game-controls">
-                <button id="newGameBtn" class="btn btn-primary">🎮 新游戏</button>
-                <button id="resetGameBtn" class="btn btn-secondary">🔄 重置</button>
-                <button id="getHintBtn" class="btn btn-info">💡 提示(<span id="hintsRemaining">1</span>)</button>
-                <button id="syncBtn" class="btn btn-warning">🔄 同步</button>
+                <button id="newGameBtn" class="btn btn-primary">新游戏</button>
+                <button id="resetGameBtn" class="btn btn-secondary">重置</button>
+                <button id="getHintBtn" class="btn btn-info">提示(<span id="hintsRemaining">1</span>)</button>
+                <button id="syncBtn" class="btn btn-warning">同步</button>
             </div>
 
             <div class="settings">
                 <div class="setting-group">
-                    <label for="difficultySelect">🧠 AI难度：</label>
+                    <label for="difficultySelect">AI难度：</label>
                     <select id="difficultySelect" class="select-box">
                         <option value="1">简单</option>
                         <option value="2">普通</option>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="setting-group">
-                    <label for="speedSelect">⚡ AI速度：</label>
+                    <label for="speedSelect">AI速度：</label>
                     <select id="speedSelect" class="select-box">
                         <option value="0">极速</option>
                         <option value="1" selected>正常</option>
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="setting-group">
-                    <label for="cameraPreset">📷 视角：</label>
+                    <label for="cameraPreset">视角：</label>
                     <select id="cameraPreset" class="select-box">
                         <option value="default" selected>侧视图</option>
                         <option value="top">正俯视</option>
@@ -78,10 +78,10 @@
         <div class="game-scene-container">
             <div id="gameScene"></div>
             <div class="scene-info">
-                <p>🖱️ 鼠标左键：旋转视角</p>
-                <p>🖱️ 鼠标滚轮：缩放</p>
-                <p>🖱️ 鼠标右键：移动视角</p>
-                <p>🎯 点击棋盘交叉点落子</p>
+                <p>鼠标左键：旋转视角</p>
+                <p>鼠标滚轮：缩放</p>
+                <p>鼠标右键：移动视角</p>
+                <p>点击棋盘交叉点落子</p>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
         <div class="modal-overlay" id="gameOverModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>🎉 游戏结束</h3>
+                    <h3>游戏结束</h3>
                     <button class="modal-close" id="closeModal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -103,7 +103,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" id="closeModalBtn">关闭</button>
-                    <button class="btn btn-primary" id="newGameFromModal">🎮 新游戏</button>
+                    <button class="btn btn-primary" id="newGameFromModal">新游戏</button>
                 </div>
             </div>
         </div>
