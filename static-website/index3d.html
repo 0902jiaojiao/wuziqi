@@ -1,21 +1,25 @@
-<!DOCTYPE html>
+1<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 五子棋AI对战 - 静态版</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <title>🎮 五子棋AI对战 - 3D静态版</title>
+    <link rel="stylesheet" href="style3d.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23333%22/></svg>">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls for camera control -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
     <div class="container">
         <!-- 游戏标题 -->
         <header class="game-header">
-            <h1>五子棋AI对战</h1>
-            <p class="subtitle">挑战智能AI，体验策略乐趣 - 静态版</p>
+            <h1>五子棋AI对战 3D版</h1>
+            <p class="subtitle">真实3D体验，专业AI挑战 - 静态版</p>
             <div class="version-switch">
-                <a href="index3d.html" class="btn btn-outline">🎲 体验3D版本</a>
-                <span class="btn btn-outline disabled">🎮 静态版本（无需后端）</span>
+                <a href="index.html" class="btn btn-outline">🎲 切换到2D版本</a>
             </div>
         </header>
 
@@ -58,13 +62,29 @@
                         <option value="4">深思</option>
                     </select>
                 </div>
+
+                <div class="setting-group">
+                    <label for="cameraPreset">视角：</label>
+                    <select id="cameraPreset" class="select-box">
+                        <option value="default" selected>侧视图</option>
+                        <option value="top">正俯视</option>
+                        <option value="angle">斜角俯视</option>
+                        <option value="close">近景</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- 游戏棋盘 -->
-        <div class="game-board-container">
-            <canvas id="gameBoard" width="600" height="600"></canvas>
-            <div class="hint-overlay" id="hintOverlay"></div>
+        <!-- 3D游戏场景 -->
+        <div class="game-scene-container">
+            <div id="gameScene"></div>
+            <div class="scene-info">
+                <p>💡 3D操作指南：</p>
+                <p>🖱️ 鼠标左键：旋转视角</p>
+                <p>🖱️ 鼠标滚轮：缩放</p>
+                <p>🖱️ 鼠标右键：移动视角</p>
+                <p>🎯 点击棋盘交叉点落子</p>
+            </div>
         </div>
 
         <!-- AI落子提示 -->
@@ -92,14 +112,14 @@
 
         <!-- 页脚信息 -->
         <footer class="game-footer">
-            <p>智能AI | 5个难度等级 | 智能提示系统 | 悔棋功能</p>
-            <p class="version">静态版 v1.0 | 无需后端服务器</p>
+            <p>🎮 3D沉浸体验 | 智能AI | 5个难度等级 | 智能提示系统 | 悔棋功能</p>
+            <p class="version">3D静态版 v1.0 | 无需后端服务器 | Three.js驱动</p>
         </footer>
     </div>
 
     <!-- JavaScript依赖 -->
     <script src="game-logic.js"></script>
     <script src="ai-player.js"></script>
-    <script src="static-game.js"></script>
+    <script src="static-game3d.js"></script>
 </body>
 </html>
