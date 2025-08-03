@@ -319,6 +319,8 @@ class StaticGomoku3D {
             return;
         }
 
+        // 确保controls状态是最新的
+        this.controls.update();
         this.updateMousePosition(event);
         
         // 射线检测
@@ -347,6 +349,8 @@ class StaticGomoku3D {
             return;
         }
 
+        // 确保controls状态是最新的
+        this.controls.update();
         this.updateTouchPosition(event);
         
         // 射线检测
@@ -370,6 +374,8 @@ class StaticGomoku3D {
      * 触摸移动事件（用于悬停效果）
      */
     onTouchMove(event) {
+        // 确保controls状态是最新的
+        this.controls.update();
         this.updateTouchPosition(event);
         
         // 射线检测悬停效果
@@ -400,8 +406,18 @@ class StaticGomoku3D {
     updateTouchPosition(event) {
         if (event.changedTouches && event.changedTouches[0]) {
             const rect = this.renderer.domElement.getBoundingClientRect();
-            this.mouse.x = ((event.changedTouches[0].clientX - rect.left) / rect.width) * 2 - 1;
-            this.mouse.y = -((event.changedTouches[0].clientY - rect.top) / rect.height) * 2 + 1;
+            const touch = event.changedTouches[0];
+            
+            // 计算精确的触摸坐标，考虑设备像素比
+            const scaleX = this.renderer.domElement.width / rect.width;
+            const scaleY = this.renderer.domElement.height / rect.height;
+            
+            const x = (touch.clientX - rect.left) * scaleX;
+            const y = (touch.clientY - rect.top) * scaleY;
+            
+            // 转换为标准化设备坐标 (-1 到 +1)
+            this.mouse.x = (x / this.renderer.domElement.width) * 2 - 1;
+            this.mouse.y = -(y / this.renderer.domElement.height) * 2 + 1;
         }
     }
 
@@ -441,6 +457,8 @@ class StaticGomoku3D {
      * 鼠标移动事件
      */
     onMouseMove(event) {
+        // 确保controls状态是最新的
+        this.controls.update();
         this.updateMousePosition(event);
         
         // 射线检测悬停效果
@@ -475,8 +493,17 @@ class StaticGomoku3D {
      */
     updateMousePosition(event) {
         const rect = this.renderer.domElement.getBoundingClientRect();
-        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        // 计算精确的鼠标坐标，考虑设备像素比
+        const scaleX = this.renderer.domElement.width / rect.width;
+        const scaleY = this.renderer.domElement.height / rect.height;
+        
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+        
+        // 转换为标准化设备坐标 (-1 到 +1)
+        this.mouse.x = (x / this.renderer.domElement.width) * 2 - 1;
+        this.mouse.y = -(y / this.renderer.domElement.height) * 2 + 1;
     }
 
     /**
