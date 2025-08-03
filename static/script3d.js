@@ -61,12 +61,15 @@ class Gomoku3D {
         // 创建渲染器
         this.renderer = new THREE.WebGLRenderer({ 
             antialias: true,
-            alpha: true
+            alpha: true,
+            powerPreference: "high-performance"
         });
         this.renderer.setSize(container.clientWidth, container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 提高像素比
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.setClearColor(0xf0f8ff, 1);
+        this.renderer.outputEncoding = THREE.sRGBEncoding; // 改善颜色显示
         container.appendChild(this.renderer.domElement);
         
         // 创建控制器
@@ -151,15 +154,17 @@ class Gomoku3D {
         // 黑子材质
         this.materials.blackPiece = new THREE.MeshPhongMaterial({ 
             color: 0x222222,
-            shininess: 100,
-            specular: 0x111111
+            shininess: 120,
+            specular: 0x333333,
+            transparent: false
         });
         
         // 白子材质
         this.materials.whitePiece = new THREE.MeshPhongMaterial({ 
             color: 0xffffff,
-            shininess: 100,
-            specular: 0xffffff
+            shininess: 120,
+            specular: 0xffffff,
+            transparent: false
         });
         
         // 提示材质
@@ -503,6 +508,7 @@ class Gomoku3D {
         this.camera.aspect = container.clientWidth / container.clientHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(container.clientWidth, container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 重新设置像素比
     }
 
     // 更新3D场景
