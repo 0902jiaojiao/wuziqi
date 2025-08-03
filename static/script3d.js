@@ -283,11 +283,14 @@ class Gomoku3D {
 
     // 创建3D棋子
     create3DPiece(row, col, player, animate = false) {
-        const pieceGeometry = new THREE.SphereGeometry(0.35, 16, 12);
+        // 使用扁平的椭球体几何，更像真实的棋子
+        const pieceGeometry = new THREE.SphereGeometry(0.35, 16, 8);
+        pieceGeometry.scale(1, 0.4, 1); // Y轴压缩，使棋子更扁平
+        
         const material = player === 1 ? this.materials.blackPiece : this.materials.whitePiece;
         const piece = new THREE.Mesh(pieceGeometry, material);
         
-        piece.position.set(col - 7, animate ? 5 : 0.35, row - 7);
+        piece.position.set(col - 7, animate ? 5 : 0.14, row - 7); // 调整Y位置适应扁平形状
         piece.castShadow = true;
         piece.receiveShadow = true;
         piece.userData = { row, col, player };
@@ -304,7 +307,7 @@ class Gomoku3D {
 
     // 棋子掉落动画
     animatePieceDrop(piece) {
-        const targetY = 0.35;
+        const targetY = 0.14; // 适应扁平棋子的高度
         const startY = piece.position.y;
         const duration = 600; // 缩短动画时间
         const startTime = Date.now();
