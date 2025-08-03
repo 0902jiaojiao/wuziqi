@@ -68,6 +68,9 @@ class GomokuGame {
     // 处理棋盘点击
     async handleBoardClick(e) {
         if (this.isProcessing || this.gameOver || this.currentPlayer !== 1) {
+            if (this.isProcessing) {
+                this.showToast('请等待AI思考完成', 1000);
+            }
             return;
         }
 
@@ -82,7 +85,32 @@ class GomokuGame {
             return;
         }
 
+        // 添加点击反馈效果
+        this.showClickFeedback(row, col);
+        
         await this.makeMove(row, col);
+    }
+
+    // 显示点击反馈效果
+    showClickFeedback(row, col) {
+        const canvas = this.canvas;
+        const rect = canvas.getBoundingClientRect();
+        const x = this.cellSize * (col + 0.5);
+        const y = this.cellSize * (row + 0.5);
+        
+        // 创建临时点击效果
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x, y, this.cellSize * 0.2, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+        ctx.fill();
+        ctx.restore();
+        
+        // 50ms后重绘棋盘清除效果
+        setTimeout(() => {
+            this.drawBoard();
+        }, 50);
     }
 
     // 玩家落子
@@ -91,7 +119,12 @@ class GomokuGame {
         
         this.isProcessing = true;
         this.clearHint();
-        this.updateStatus('处理中...', true);
+        
+        // 立即显示玩家棋子，提升响应速度
+        const originalPiece = this.board[row][col];
+        this.board[row][col] = 1;
+        this.drawBoard();
+        this.updateStatus('AI正在思考...', true);
 
         try {
             const difficulty = parseInt(document.getElementById('difficultySelect').value);
@@ -115,10 +148,13 @@ class GomokuGame {
             const result = await response.json();
 
             if (!response.ok) {
+                // 恢复原始状态
+                this.board[row][col] = originalPiece;
+                this.drawBoard();
                 throw new Error(result.message || result.error || '网络请求失败');
             }
 
-            // 更新游戏状态
+            // 更新完整游戏状态
             this.updateGameState(result.board_state);
 
             // 检查游戏是否结束
@@ -140,6 +176,11 @@ class GomokuGame {
 
         } catch (error) {
             console.error('落子失败:', error);
+            
+            // 恢复原始状态
+            this.board[row][col] = originalPiece;
+            this.drawBoard();
+            
             this.showToast(`落子失败：${error.message}`, 3000);
             
             // 尝试同步状态
