@@ -223,6 +223,14 @@ body {
         inset 0 -3px 6px rgba(0,0,0,0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
+    /* 移动端触摸优化 */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #gameBoard:hover {
@@ -445,6 +453,8 @@ body {
         width: 100%;
         max-width: 400px;
         height: auto;
+        /* 移动端确保画布保持正方形 */
+        aspect-ratio: 1;
     }
     
     .btn {

@@ -19,6 +19,7 @@ class StaticGomokuGame {
         this.lastAiMove = null;
         this.moveHistory = []; // 用于悔棋功能
         
+        this.initializeCanvas();
         this.initializeEventListeners();
         this.drawBoard();
         this.updateStatus();
@@ -26,11 +27,55 @@ class StaticGomokuGame {
     }
 
     /**
+     * 初始化画布，确保在移动设备上正确显示
+     */
+    initializeCanvas() {
+        // 获取设备像素比，确保高清显示
+        const dpr = window.devicePixelRatio || 1;
+        
+        // 获取画布的CSS尺寸
+        const rect = this.canvas.getBoundingClientRect();
+        
+        // 如果画布显示尺寸改变了，重新设置
+        if (rect.width !== this.canvas.offsetWidth || rect.height !== this.canvas.offsetHeight) {
+            // 设置画布内部尺寸为显示尺寸 * 设备像素比
+            this.canvas.width = rect.width * dpr;
+            this.canvas.height = rect.height * dpr;
+            
+            // 缩放绘图上下文以适应设备像素比
+            this.ctx.scale(dpr, dpr);
+            
+            // 重新计算单元格大小
+            this.cellSize = Math.min(rect.width, rect.height) / this.boardSize;
+        }
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
+            setTimeout(() => {
+                this.initializeCanvas();
+                this.drawBoard();
+            }, 100);
+        });
+        
+        // 监听屏幕方向变化（移动设备）
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.initializeCanvas();
+                this.drawBoard();
+            }, 300);
+        });
+    }
+
+    /**
      * 初始化事件监听器
      */
     initializeEventListeners() {
-        // 棋盘点击事件
+        // 棋盘点击事件 - 支持鼠标和触摸
         this.canvas.addEventListener('click', (e) => this.handleBoardClick(e));
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault(); // 防止触发click事件
+            this.handleBoardClick(e);
+        }, { passive: false });
         
         // 按钮事件
         document.getElementById('newGameBtn').addEventListener('click', () => this.newGame());
@@ -76,15 +121,36 @@ class StaticGomokuGame {
     }
 
     /**
-     * 获取鼠标点击位置对应的棋盘坐标
+     * 获取点击位置对应的棋盘坐标（支持鼠标和触摸）
      */
     getBoardPosition(e) {
         const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
         
-        const col = Math.round(x / this.cellSize - 0.5);
-        const row = Math.round(y / this.cellSize - 0.5);
+        // 获取实际点击坐标 - 支持触摸事件
+        let clientX, clientY;
+        if (e.type === 'touchend' && e.changedTouches && e.changedTouches[0]) {
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+        
+        // 计算相对画布的坐标
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        
+        // 考虑画布实际大小和显示大小的比例
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+        
+        // 调整坐标
+        const adjustedX = x * scaleX;
+        const adjustedY = y * scaleY;
+        
+        // 计算棋盘坐标
+        const col = Math.round(adjustedX / this.cellSize - 0.5);
+        const row = Math.round(adjustedY / this.cellSize - 0.5);
         
         return { row, col };
     }
