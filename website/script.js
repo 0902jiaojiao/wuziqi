@@ -14,7 +14,8 @@ class GomokuGame {
         this.hintsRemaining = 1;
         this.isProcessing = false;
         this.lastAiMove = null; // 记录AI的最新落子位置
-        this.serverUrl = window.location.origin; // 使用当前网站的域名
+        // 使用配置文件中的API地址
+        this.serverUrl = window.GAME_CONFIG ? window.GAME_CONFIG.API_URL : 'http://localhost:5001';
         
         this.initializeBoard();
         this.setupEventListeners();

@@ -11,7 +11,8 @@ class Gomoku3D {
         this.hintsRemaining = 1;
         this.isProcessing = false;
         this.lastAiMove = null;
-        this.serverUrl = window.location.origin;
+        // 使用配置文件中的API地址
+        this.serverUrl = window.GAME_CONFIG ? window.GAME_CONFIG.API_URL : 'http://localhost:5001';
         
         // Three.js 相关
         this.scene = null;

@@ -13,7 +13,9 @@ website/
 ├── script.js              # 2D版本逻辑
 ├── index3d.html           # 3D版本首页 
 ├── style3d.css            # 3D版本样式
-└── script3d.js            # 3D版本逻辑（Three.js）
+├── script3d.js            # 3D版本逻辑（Three.js）
+├── config.js              # 配置文件（API地址等）
+└── README.md              # 说明文档
 ```
 
 ### 🎯 版本说明
@@ -48,6 +50,40 @@ http://localhost:5001/          # 2D版本
 http://localhost:5001/index3d.html  # 3D版本
 ```
 
+### 🌐 GitHub Pages 部署
+
+#### 部署到GitHub Pages：
+
+1. **Fork或clone此项目**
+2. **在GitHub仓库设置中启用Pages**
+3. **配置后端API地址**：
+   ```javascript
+   // 修改 config.js 中的 PROD_API_URL
+   PROD_API_URL: 'https://your-backend-url.render.com'
+   ```
+4. **推送到main分支**，GitHub Actions会自动部署
+
+#### 后端部署推荐：
+- **Render** (免费): https://render.com
+- **Vercel** (免费): https://vercel.com  
+- **Railway** (免费额度): https://railway.app
+
+### 🔧 配置说明
+
+#### API配置 (`config.js`)
+```javascript
+const GAME_CONFIG = {
+    DEV_API_URL: 'http://localhost:5001',     // 开发环境
+    PROD_API_URL: 'https://your-backend.com', // 生产环境
+    // 自动根据域名切换环境
+}
+```
+
+#### 环境检测
+- **本地开发**: 自动使用 `localhost:5001`
+- **GitHub Pages**: 自动使用生产环境API
+- **支持自定义域名**: 自动适配
+
 ### 🎨 UI特点
 
 - ✅ **专业简洁**：去除表情符号，界面更专业
@@ -69,3 +105,11 @@ http://localhost:5001/index3d.html  # 3D版本
 - OrbitControls 相机控制
 - Raycaster 点击检测
 - 物理材质和光照
+
+### 🌟 在线体验
+
+部署后可通过以下地址访问：
+- **2D版本**: `https://username.github.io/wuziqi/`
+- **3D版本**: `https://username.github.io/wuziqi/index3d.html`
+
+（请将 `username` 替换为你的GitHub用户名）
