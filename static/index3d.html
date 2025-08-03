@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 五子棋AI对战 - 网页版</title>
-    <link rel="stylesheet" href="style.css">
+    <title>🎮 五子棋AI对战 - 3D版本</title>
+    <link rel="stylesheet" href="style3d.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls for camera control -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
     <div class="container">
         <!-- 游戏标题 -->
         <header class="game-header">
-            <h1>五子棋AI对战</h1>
-            <p class="subtitle">挑战智能AI，体验策略乐趣</p>
+            <h1>🎮 五子棋AI对战 3D版</h1>
+            <p class="subtitle">真实3D体验，专业AI挑战</p>
             <div class="version-switch">
-                <a href="/index3d.html" class="btn btn-outline">🎮 体验3D版本</a>
+                <a href="/" class="btn btn-outline">切换到2D版本</a>
             </div>
         </header>
 
@@ -29,15 +34,15 @@
             </div>
 
             <div class="game-controls">
-                <button id="newGameBtn" class="btn btn-primary">新游戏</button>
-                <button id="resetGameBtn" class="btn btn-secondary">重置</button>
-                <button id="getHintBtn" class="btn btn-info">提示(<span id="hintsRemaining">1</span>)</button>
-                <button id="syncBtn" class="btn btn-warning">同步</button>
+                <button id="newGameBtn" class="btn btn-primary">🎮 新游戏</button>
+                <button id="resetGameBtn" class="btn btn-secondary">🔄 重置</button>
+                <button id="getHintBtn" class="btn btn-info">💡 提示(<span id="hintsRemaining">1</span>)</button>
+                <button id="syncBtn" class="btn btn-warning">🔄 同步</button>
             </div>
 
             <div class="settings">
                 <div class="setting-group">
-                    <label for="difficultySelect">AI难度：</label>
+                    <label for="difficultySelect">🧠 AI难度：</label>
                     <select id="difficultySelect" class="select-box">
                         <option value="1">简单</option>
                         <option value="2">普通</option>
@@ -48,22 +53,36 @@
                 </div>
 
                 <div class="setting-group">
-                    <label for="speedSelect">AI速度：</label>
+                    <label for="speedSelect">⚡ AI速度：</label>
                     <select id="speedSelect" class="select-box">
                         <option value="0">极速</option>
-                        <option value="1">快速</option>
-                        <option value="2" selected>普通</option>
-                        <option value="3">慢速</option>
-                        <option value="4">深思</option>
+                        <option value="1" selected>正常</option>
+                        <option value="2">缓慢</option>
+                        <option value="3">深思</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label for="cameraPreset">📷 视角：</label>
+                    <select id="cameraPreset" class="select-box">
+                        <option value="default" selected>默认视角</option>
+                        <option value="top">俯视图</option>
+                        <option value="side">侧视图</option>
+                        <option value="close">近景</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- 游戏棋盘 -->
-        <div class="game-board-container">
-            <canvas id="gameBoard" width="600" height="600"></canvas>
-            <div class="hint-overlay" id="hintOverlay"></div>
+        <!-- 3D游戏场景 -->
+        <div class="game-scene-container">
+            <div id="gameScene"></div>
+            <div class="scene-info">
+                <p>🖱️ 鼠标左键：旋转视角</p>
+                <p>🖱️ 鼠标滚轮：缩放</p>
+                <p>🖱️ 鼠标右键：移动视角</p>
+                <p>🎯 点击棋盘交叉点落子</p>
+            </div>
         </div>
 
         <!-- AI落子提示 -->
@@ -76,7 +95,7 @@
         <div class="modal-overlay" id="gameOverModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>游戏结束</h3>
+                    <h3>🎉 游戏结束</h3>
                     <button class="modal-close" id="closeModal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -84,18 +103,13 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" id="closeModalBtn">关闭</button>
-                    <button class="btn btn-primary" id="newGameFromModal">新游戏</button>
+                    <button class="btn btn-primary" id="newGameFromModal">🎮 新游戏</button>
                 </div>
             </div>
         </div>
-
-        <!-- 页脚信息 -->
-        <footer class="game-footer">
-            <p>智能AI | 5个难度等级 | 智能提示系统</p>
-            <p class="version">网页版 v3.0 | 专业版界面设计</p>
-        </footer>
     </div>
 
-    <script src="script.js"></script>
+    <!-- 加载Three.js 3D游戏逻辑 -->
+    <script src="script3d.js"></script>
 </body>
 </html>

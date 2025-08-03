@@ -38,6 +38,26 @@ body {
     opacity: 0.9;
 }
 
+.version-switch {
+    margin-top: 15px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.8);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-outline:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
 /* 控制面板 */
 .control-panel {
     background: white;
