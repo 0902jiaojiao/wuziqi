@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/game/game"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#2c3e50",
+    "navigationBarTitleText": "五子棋AI对战",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#ecf0f1",
+    "backgroundTextStyle": "dark"
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

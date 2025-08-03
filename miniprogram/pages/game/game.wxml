@@ -1,0 +1,86 @@
+<!--game.wxml-->
+<view class="container">
+  <!-- 游戏头部信息 -->
+  <view class="game-header">
+    <view class="game-status">
+      <text class="status-text">{{gameStatus}}</text>
+      <text class="current-player" wx:if="{{!gameOver}}">
+        当前回合: {{currentPlayer === 1 ? '玩家(黑子)' : 'AI(白子)'}}
+      </text>
+    </view>
+    <view class="game-controls">
+      <button class="control-btn" size="mini" bindtap="onNewGame">新游戏</button>
+      <button class="control-btn" size="mini" bindtap="onResetGame">重置</button>
+      <button class="control-btn" size="mini" bindtap="onGetHint" disabled="{{currentPlayer !== 1 || gameOver || hintsRemaining <= 0}}">提示({{hintsRemaining}})</button>
+      <button class="control-btn refresh-btn" size="mini" bindtap="onRefreshState">同步</button>
+    </view>
+  </view>
+
+  <!-- 棋盘 -->
+  <view class="game-board">
+    <canvas 
+      canvas-id="gameCanvas" 
+      class="board-canvas"
+      bindtouchstart="onCanvasTouch"
+      style="width: {{canvasSize}}px; height: {{canvasSize}}px;"
+    ></canvas>
+  </view>
+
+  <!-- 游戏设置 -->
+  <view class="game-settings">
+    <view class="setting-item">
+      <text>AI难度:</text>
+      <picker 
+        bindchange="onDifficultyChange" 
+        value="{{difficultyIndex}}" 
+        range="{{difficultyOptions}}"
+        disabled="{{!gameOver && gameId}}"
+      >
+        <view class="picker">{{difficultyOptions[difficultyIndex]}}</view>
+      </picker>
+    </view>
+    <view class="setting-item">
+      <text>AI速度:</text>
+      <picker 
+        bindchange="onSpeedChange" 
+        value="{{speedIndex}}" 
+        range="{{speedOptions}}"
+      >
+        <view class="picker">{{speedOptions[speedIndex]}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 提示显示 -->
+  <view class="hint-display" wx:if="{{hintMove}}">
+    <text>AI提示: 第{{hintMove.row + 1}}行, 第{{hintMove.col + 1}}列</text>
+    <button size="mini" bindtap="clearHint">清除提示</button>
+  </view>
+
+  <!-- 游戏结果弹窗 -->
+  <view class="modal-mask" wx:if="{{showGameOverModal}}" bindtap="closeModal">
+    <view class="modal-dialog" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">游戏结束</text>
+        <text class="modal-close" bindtap="closeModal">×</text>
+      </view>
+      <view class="modal-body">
+        <text class="modal-text">{{gameResultText}}</text>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" bindtap="onResetGame">重置</button>
+        <button class="modal-btn modal-btn-confirm" bindtap="onNewGame">新游戏</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 避开棋盘的自定义Toast -->
+  <view class="board-safe-toast" wx:if="{{showCustomToast}}">
+    {{customToastText}}
+  </view>
+
+  <!-- AI落子高亮提示 -->
+  <view class="ai-move-highlight" wx:if="{{showAiMoveHighlight}}">
+    {{aiMoveText}}
+  </view>
+</view>
