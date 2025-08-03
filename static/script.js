@@ -13,6 +13,7 @@ class GomokuGame {
         this.hintMove = null;
         this.hintsRemaining = 1;
         this.isProcessing = false;
+        this.lastAiMove = null; // 记录AI的最新落子位置
         this.serverUrl = window.location.origin; // 使用当前网站的域名
         
         this.initializeBoard();
@@ -119,6 +120,8 @@ class GomokuGame {
         
         this.isProcessing = true;
         this.clearHint();
+        // 用户落子时清除上一次AI高亮，让新的AI落子更明显
+        this.lastAiMove = null;
         
         // 立即显示玩家棋子，提升响应速度
         const originalPiece = this.board[row][col];
@@ -152,6 +155,14 @@ class GomokuGame {
                 this.board[row][col] = originalPiece;
                 this.drawBoard();
                 throw new Error(result.message || result.error || '网络请求失败');
+            }
+
+            // 记录AI最新落子位置
+            if (result.ai_move) {
+                this.lastAiMove = {
+                    row: result.ai_move.row,
+                    col: result.ai_move.col
+                };
             }
 
             // 更新完整游戏状态
@@ -294,6 +305,7 @@ class GomokuGame {
 
             this.gameId = result.game_id;
             this.hintsRemaining = 1;
+            this.lastAiMove = null; // 重置AI落子标记
             this.updateHintsDisplay();
             this.updateGameState(result.board_state);
             this.closeModal();
@@ -333,6 +345,7 @@ class GomokuGame {
             }
 
             this.hintsRemaining = result.hints_remaining || 1;
+            this.lastAiMove = null; // 重置AI落子标记
             this.updateHintsDisplay();
             this.updateGameState(result.board_state);
             this.closeModal();
@@ -505,6 +518,11 @@ class GomokuGame {
         if (this.hintMove) {
             this.drawHint(this.hintMove.row, this.hintMove.col);
         }
+        
+        // 绘制AI最新落子高亮
+        if (this.lastAiMove) {
+            this.drawLastAiMove(this.lastAiMove.row, this.lastAiMove.col);
+        }
     }
 
     // 绘制棋子
@@ -554,6 +572,50 @@ class GomokuGame {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('提示', x, y);
+    }
+
+    // 绘制AI最新落子高亮
+    drawLastAiMove(row, col) {
+        const ctx = this.ctx;
+        const x = this.cellSize * (col + 0.5);
+        const y = this.cellSize * (row + 0.5);
+        const radius = this.cellSize * 0.45;
+        
+        // 绘制呼吸效果的外圈
+        const time = Date.now() / 1000;
+        const pulseRadius = radius + Math.sin(time * 3) * 3;
+        
+        ctx.save();
+        
+        // 外圈 - 蓝色呼吸效果
+        ctx.beginPath();
+        ctx.arc(x, y, pulseRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'rgba(52, 152, 219, 0.8)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // 内圈 - 固定蓝色圆圈
+        ctx.beginPath();
+        ctx.arc(x, y, radius - 5, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#3498db';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // 绘制标识文字
+        ctx.fillStyle = '#2980b9';
+        ctx.font = 'bold 10px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('AI', x, y);
+        
+        ctx.restore();
+        
+        // 安排下次重绘以实现动画效果
+        setTimeout(() => {
+            if (this.lastAiMove && this.lastAiMove.row === row && this.lastAiMove.col === col) {
+                this.drawBoard();
+            }
+        }, 100);
     }
 }
 
