@@ -612,78 +612,7 @@ class GomokuGame {
         ctx.restore();
     }
 
-    // 绘制3D黑子
-    draw3DBlackPiece(x, y, radius) {
-        const ctx = this.ctx;
-        
-        // 外部投影
-        const shadowGradient = ctx.createRadialGradient(x + 3, y + 3, 0, x + 3, y + 3, radius + 5);
-        shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
-        shadowGradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.2)');
-        shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        
-        ctx.fillStyle = shadowGradient;
-        ctx.beginPath();
-        ctx.arc(x + 3, y + 3, radius + 5, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // 主体球体渐变
-        const mainGradient = ctx.createRadialGradient(
-            x - radius * 0.4, y - radius * 0.4, 0,
-            x, y, radius
-        );
-        mainGradient.addColorStop(0, '#666666');
-        mainGradient.addColorStop(0.2, '#444444');
-        mainGradient.addColorStop(0.5, '#222222');
-        mainGradient.addColorStop(0.8, '#111111');
-        mainGradient.addColorStop(1, '#000000');
-        
-        ctx.fillStyle = mainGradient;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // 主高光点
-        const highlight1 = ctx.createRadialGradient(
-            x - radius * 0.35, y - radius * 0.35, 0,
-            x - radius * 0.35, y - radius * 0.35, radius * 0.4
-        );
-        highlight1.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-        highlight1.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
-        highlight1.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        
-        ctx.fillStyle = highlight1;
-        ctx.beginPath();
-        ctx.arc(x - radius * 0.35, y - radius * 0.35, radius * 0.4, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // 次高光点
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.beginPath();
-        ctx.arc(x - radius * 0.2, y - radius * 0.2, radius * 0.15, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // 反射光
-        const reflectGradient = ctx.createLinearGradient(
-            x - radius, y + radius * 0.3,
-            x + radius, y + radius * 0.3
-        );
-        reflectGradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-        reflectGradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.1)');
-        reflectGradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.1)');
-        reflectGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        
-        ctx.fillStyle = reflectGradient;
-        ctx.beginPath();
-        ctx.arc(x, y, radius * 0.9, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // 3D边缘效果
-        ctx.strokeStyle = '#333333';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.stroke();\n    }\n\n    // 绘制3D白子\n    draw3DWhitePiece(x, y, radius) {\n        const ctx = this.ctx;\n        \n        // 外部投影\n        const shadowGradient = ctx.createRadialGradient(x + 2, y + 2, 0, x + 2, y + 2, radius + 4);\n        shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.3)');\n        shadowGradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.15)');\n        shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');\n        \n        ctx.fillStyle = shadowGradient;\n        ctx.beginPath();\n        ctx.arc(x + 2, y + 2, radius + 4, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 主体球体渐变\n        const mainGradient = ctx.createRadialGradient(\n            x - radius * 0.3, y - radius * 0.3, 0,\n            x, y, radius\n        );\n        mainGradient.addColorStop(0, '#ffffff');\n        mainGradient.addColorStop(0.3, '#fafafa');\n        mainGradient.addColorStop(0.6, '#f0f0f0');\n        mainGradient.addColorStop(0.8, '#e0e0e0');\n        mainGradient.addColorStop(1, '#c8c8c8');\n        \n        ctx.fillStyle = mainGradient;\n        ctx.beginPath();\n        ctx.arc(x, y, radius, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 珍珠光泽效果\n        const pearlGradient = ctx.createRadialGradient(\n            x - radius * 0.4, y - radius * 0.4, 0,\n            x - radius * 0.4, y - radius * 0.4, radius * 0.6\n        );\n        pearlGradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');\n        pearlGradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.5)');\n        pearlGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');\n        \n        ctx.fillStyle = pearlGradient;\n        ctx.beginPath();\n        ctx.arc(x - radius * 0.4, y - radius * 0.4, radius * 0.6, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 主高光点\n        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';\n        ctx.beginPath();\n        ctx.arc(x - radius * 0.25, y - radius * 0.25, radius * 0.2, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 次高光点\n        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';\n        ctx.beginPath();\n        ctx.arc(x - radius * 0.1, y - radius * 0.4, radius * 0.1, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 环境反射\n        const envGradient = ctx.createLinearGradient(\n            x - radius, y,\n            x + radius, y\n        );\n        envGradient.addColorStop(0, 'rgba(173, 216, 230, 0)');\n        envGradient.addColorStop(0.3, 'rgba(173, 216, 230, 0.15)');\n        envGradient.addColorStop(0.7, 'rgba(173, 216, 230, 0.15)');\n        envGradient.addColorStop(1, 'rgba(173, 216, 230, 0)');\n        \n        ctx.fillStyle = envGradient;\n        ctx.beginPath();\n        ctx.arc(x, y, radius * 0.85, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // 3D边缘效果\n        ctx.strokeStyle = '#aaaaaa';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.arc(x, y, radius, 0, 2 * Math.PI);\n        ctx.stroke();\n    }
+
 
     // 绘制提示
     drawHint(row, col) {
