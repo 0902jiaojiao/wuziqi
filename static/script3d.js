@@ -55,7 +55,7 @@ class Gomoku3D {
             0.1, 
             1000
         );
-        this.camera.position.set(10, 15, 10); // 斜角俯视图作为默认视角
+        this.camera.position.set(15, 8, 0); // 侧视图作为默认视角
         this.camera.lookAt(0, 0, 0);
         
         // 创建渲染器
@@ -446,9 +446,9 @@ class Gomoku3D {
     // 设置摄像机预设
     setCameraPreset(preset) {
         const positions = {
-            default: { x: 10, y: 15, z: 10 }, // 默认为斜角俯视图
+            default: { x: 15, y: 8, z: 0 }, // 默认为侧视图
             top: { x: 0, y: 18, z: 0 },
-            side: { x: 15, y: 8, z: 0 }, // 侧视图
+            angle: { x: 10, y: 15, z: 10 }, // 斜角俯视图
             close: { x: 6, y: 10, z: 6 }
         };
         
